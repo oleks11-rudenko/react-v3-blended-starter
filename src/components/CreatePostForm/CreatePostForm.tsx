@@ -1,11 +1,51 @@
-import * as Yup from "yup";
-import { Field, Form, Formik, FormikHelpers, ErrorMessage } from "formik";
+import * as Yup from 'yup';
+import { Field, Form, Formik, type FormikHelpers, ErrorMessage } from 'formik';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createPost } from '../../services/postService';
+import css from './CreatePostForm.module.css';
+import type { NewPost } from '../../types/post';
 
-import css from "./CreatePostForm.module.css";
+interface PostFormProps {
+  onClose: () => void;
+}
 
-export default function PostForm() {
+interface PostFormValues {
+  title: string;
+  body: string;
+}
+
+const initialValues: PostFormValues = {
+  title: '',
+  body: '',
+};
+
+const PostSchema = Yup.object().shape({
+  title: Yup.string().min(3).max(50).required('Title is required!'),
+  body: Yup.string().max(500).required('Content is required!'),
+});
+
+export default function PostForm({ onClose }: PostFormProps) {
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (newPost: NewPost) => createPost(newPost),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      alert('Post created successfully!');
+      onClose();
+    },
+  });
+
+  const handleSubmit = (values: PostFormValues, actions: FormikHelpers<PostFormValues>) => {
+    mutate({
+      title: values.title,
+      body: values.body,
+    });
+    actions.resetForm();
+  };
+
   return (
-    <Formik initialValues={} onSubmit={} validationSchema={}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PostSchema}>
       <Form className={css.form}>
         <div className={css.formGroup}>
           <label htmlFor="title">Title</label>
@@ -20,10 +60,10 @@ export default function PostForm() {
         </div>
 
         <div className={css.actions}>
-          <button type="button" className={css.cancelButton}>
+          <button onClick={onClose} type="button" className={css.cancelButton}>
             Cancel
           </button>
-          <button type="submit" className={css.submitButton} disabled={}>
+          <button type="submit" className={css.submitButton} disabled={isPending}>
             Create post
           </button>
         </div>

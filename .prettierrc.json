@@ -3,12 +3,13 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
-  "singleQuote": false,
+  "singleQuote": true,
   "trailingComma": "es5",
   "bracketSpacing": true,
   "bracketSameLine": false,
   "arrowParens": "always",
   "endOfLine": "lf",
   "jsxSingleQuote": false,
-  "htmlWhitespaceSensitivity": "ignore"
+  "htmlWhitespaceSensitivity": "css",
+  "proseWrap": "always"
 }
