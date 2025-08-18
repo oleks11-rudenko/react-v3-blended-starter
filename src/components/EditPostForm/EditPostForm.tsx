@@ -1,39 +1,11 @@
 import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from 'formik';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+
 import css from './EditPostForm.module.css';
-import { editPost } from '../../services/postService';
-import type { Post } from '../../types/post';
 
-interface EditPostFormProps {
-  editedPost: Post;
-  onClose: () => void;
-}
-
-const EditPostSchema = Yup.object().shape({
-  title: Yup.string().min(3).max(50).required('Title is required!'),
-  body: Yup.string().max(500).required('Content is required!'),
-});
-
-export default function EditPostForm({ editedPost, onClose }: EditPostFormProps) {
-  const queryClient = useQueryClient();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: (newDataPost: Post) => editPost(newDataPost),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      alert('Post changed successfully!');
-      onClose();
-    },
-  });
-
-  const handleEditPost = (values: Post, actions: FormikHelpers<Post>) => {
-    mutate(values);
-    actions.resetForm();
-  };
-
+export default function EditPostForm() {
   return (
-    <Formik initialValues={editedPost} onSubmit={handleEditPost} validationSchema={EditPostSchema}>
+    <Formik initialValues={} onSubmit={} validationSchema={}>
       <Form className={css.form}>
         <div className={css.formGroup}>
           <label htmlFor="title">Title</label>
@@ -48,10 +20,10 @@ export default function EditPostForm({ editedPost, onClose }: EditPostFormProps)
         </div>
 
         <div className={css.actions}>
-          <button onClick={onClose} type="button" className={css.cancelButton}>
+          <button type="button" className={css.cancelButton}>
             Cancel
           </button>
-          <button type="submit" className={css.submitButton} disabled={isPending}>
+          <button type="submit" className={css.submitButton} disabled={}>
             Edit post
           </button>
         </div>
