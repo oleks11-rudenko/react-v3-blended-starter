@@ -10,5 +10,6 @@
   "arrowParens": "always",
   "endOfLine": "lf",
   "jsxSingleQuote": false,
-  "htmlWhitespaceSensitivity": "ignore"
+  "htmlWhitespaceSensitivity": "css",
+  "proseWrap": "always"
 }

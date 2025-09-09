@@ -20,7 +20,7 @@ export const fetchPosts = async ({
       userId,
       ...(searchText !== '' && { q: searchText }),
       _page: page,
-      _limit: 8,
+      _limit: 28,
     },
   });
   const totalCount = Number(response.headers['x-total-count']);
@@ -38,23 +38,32 @@ interface EditedPost {
   body: string;
 }
 
-export const createPost = async (newPost: NewPostContent) => {
+export const createPost = async (newPost: NewPostContent): Promise<Post> => {
   const response = await axios.post<Post>('/posts', newPost);
   return response.data;
 };
 
-export const editPost = async (newDataPost: EditedPost) => {
+export const editPost = async (newDataPost: EditedPost): Promise<Post> => {
   const response = await axios.patch<Post>(`/posts/${newDataPost.id}`, newDataPost);
   return response.data;
 };
 
-export const deletePost = async (postId: number) => {
+export const deletePost = async (postId: number): Promise<Post> => {
   const response = await axios.delete<Post>(`/posts/${postId}`);
   return response.data;
 };
 
-export const fetchPostById = async () => {};
+export const fetchPostById = async (postId: Post['id']): Promise<Post> => {
+  const response = await axios.get<Post>(`/posts/${postId}`);
+  return response.data;
+};
 
-export const fetchUsers = async () => {};
+export const fetchUsers = async (): Promise<User[]> => {
+  const response = await axios.get<User[]>('/users');
+  return response.data;
+};
 
-export const fetchUserById = async () => {};
+export const fetchUserById = async (userId: User['id']): Promise<User> => {
+  const response = await axios.get<User>(`/users/${userId}`);
+  return response.data;
+};
